@@ -3,6 +3,7 @@ package foo2;
 import nme.display.Shape;
 import nme.display.Sprite;
 import nme.events.Event;
+import nme.geom.Rectangle;
 import nme.Lib;
 import nme.system.Capabilities;
 import nme.text.TextField;
@@ -51,9 +52,11 @@ class Main extends Sprite
 
 		addChild( tf );
 		
+		GameObject.bounds = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
+		
 		gObjects = new Array<GameObject>();
 		
-		for ( i in 0...50 ) {
+		for ( i in 0...100 ) {
 			var gobj:GameObject = new GameObject();
 			gObjects.push( gobj );
 			addChild( gobj );
