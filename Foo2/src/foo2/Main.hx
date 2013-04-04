@@ -24,14 +24,10 @@ class Main extends Sprite
 	public function new() 
 	{
 		super();
-		#if iphone
-		Lib.current.stage.addEventListener(Event.RESIZE, init);
-		#else
-		addEventListener(Event.ADDED_TO_STAGE, init);
-		#end
+		addEventListener(Event.ADDED_TO_STAGE, this_onAddedToStage);
 	}
 
-	private function init(e) 
+	private function init() 
 	{
 		// entry point
 		
@@ -60,7 +56,7 @@ class Main extends Sprite
 		gObjects = new Array<GameObject>();
 		gObject2s = new Array<GameObject2>();
 		
-		for ( i in 0...1000 ) {
+		for ( i in 0...500 ) {
 			if ( USE_CANVAS ) {
 				var gobj2 = new GameObject2();
 				gObject2s.push( gobj2 );
@@ -70,18 +66,36 @@ class Main extends Sprite
 				addChild( gobj );
 			}
 		}
-		
+	
 		if ( USE_CANVAS ) {
 			addEventListener( Event.ENTER_FRAME, onEnterFrame2 );
 		} else {
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
+		
+		resize ();
+		
+		stage.addEventListener (Event.RESIZE, stage_onResize);
 	}
 	
 	private function onEnterFrame( ev:Event ):Void {
 		for ( gobj in gObjects ) {
 			gobj.tick();
 		}
+	}
+
+	private function resize ()
+	{
+	}
+
+	private function stage_onResize (event:Event):Void
+	{	
+		resize ();
+	}
+
+	private function this_onAddedToStage (event:Event):Void
+	{	
+		init ();	
 	}
 	
 	private function onEnterFrame2( ev:Event ):Void {
