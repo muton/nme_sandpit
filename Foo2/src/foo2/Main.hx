@@ -43,6 +43,7 @@ class Main extends Sprite
 		addChild( rect );
 		
 		var tf:TextField = new TextField();
+		tf.y = 20;
 		tf.width = 300;
 		tf.wordWrap = true;
 		tf.multiline = true;
@@ -76,6 +77,10 @@ class Main extends Sprite
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 		
+
+		var fps:FPSCounter = new FPSCounter();
+		addChild( fps );
+
 		resize ();
 		
 		stage.addEventListener (Event.RESIZE, stage_onResize);
