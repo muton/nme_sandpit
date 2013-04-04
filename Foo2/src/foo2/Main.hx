@@ -1,5 +1,6 @@
 package foo2;
 
+import foo2.GameObject2;
 import nme.display.Shape;
 import nme.display.Sprite;
 import nme.events.Event;
@@ -17,8 +18,10 @@ import com.rpkit.utils.FPSCounter;
 
 class Main extends Sprite 
 {
+	private static var USE_CANVAS:Bool = true;
 	
 	private var gObjects:Array<GameObject>;
+	private var gObject2s:Array<GameObject2>;
 	
 	public function new() 
 	{
@@ -51,22 +54,27 @@ class Main extends Sprite
 		addChild( tf );
 
 		
-		GameObject.bounds = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
+		GameObject.bounds = GameObject2.bounds = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
 		
 		gObjects = new Array<GameObject>();
+		gObject2s = new Array<GameObject2>();
 		
-		for ( i in 0...100 ) {
-			var gobj:GameObject = new GameObject();
-			gObjects.push( gobj );
-			addChild( gobj );
+		for ( i in 0...500 ) {
+			if ( USE_CANVAS ) {
+				var gobj2 = new GameObject2();
+				gObject2s.push( gobj2 );
+			} else {
+				var gobj = new GameObject();
+				gObjects.push( gobj );
+				addChild( gobj );
+			}
 		}
-
-
-		var fps:FPSCounter = new FPSCounter();
-		addChild( fps );
-
-
-		addEventListener( Event.ENTER_FRAME, onEnterFrame );
+	
+		if ( USE_CANVAS ) {
+			addEventListener( Event.ENTER_FRAME, onEnterFrame2 );
+		} else {
+			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+		}
 		
 		resize ();
 		
@@ -91,6 +99,14 @@ class Main extends Sprite
 	private function this_onAddedToStage (event:Event):Void
 	{	
 		init ();	
+	}
+	
+	private function onEnterFrame2( ev:Event ):Void {
+		graphics.clear();
+		for ( gobj in gObject2s ) {
+			gobj.tick();
+			gobj.paint( graphics );
+		}
 	}
 	
 	static public function main() 
