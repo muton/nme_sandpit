@@ -1,6 +1,10 @@
 package foo2;
+import nme.display.Bitmap;
+import nme.Assets;
+import nme.display.BitmapData;
 import nme.display.Graphics;
 import nme.events.Event;
+import nme.geom.Matrix;
 import nme.geom.Rectangle;
 
 /**
@@ -10,6 +14,8 @@ import nme.geom.Rectangle;
 
 class GameObject2 {
 
+	private static var USE_BITMAP:Bool = true;
+	
 	public static var bounds:Rectangle = new Rectangle( 0, 0, 500, 400 );
 	
 	private var radius:Int;
@@ -18,6 +24,8 @@ class GameObject2 {
 	public var y:Float = 0;
 	private var velocityX:Float = 0;
 	private var velocityY:Float = 0;
+	
+	private var bmp:BitmapData;
 	
 	public function new() {
 		
@@ -28,13 +36,26 @@ class GameObject2 {
 		alpha = 0.2 + Math.random() * 0.6;
 		x = bounds.left + Math.random() * bounds.width;
 		y = bounds.top + Math.random() * bounds.height;
+		
+		if ( USE_BITMAP ) {
+			bmp = Assets.getBitmapData( "img/alien.png" );
+		}
 	}
 	
 
 	public function paint( canvas:Graphics ) {
-		canvas.beginFill( 0xff0000, alpha );
-		canvas.drawCircle( x, y, radius );
-		canvas.endFill();
+		if ( USE_BITMAP ) {
+			var mtr = new Matrix();
+			mtr.tx = x;
+			mtr.ty = y;
+			canvas.beginBitmapFill( bmp, mtr );
+			canvas.drawRect( x, y, 50, 50 );
+			canvas.endFill();
+		} else {
+			canvas.beginFill( 0xff0000, alpha );
+			canvas.drawCircle( x, y, radius );
+			canvas.endFill();
+		}
 	}
 	
 	public function tick() {
