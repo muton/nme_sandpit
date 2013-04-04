@@ -23,6 +23,11 @@ class Main extends Sprite
 	private var gObjects:Array<GameObject>;
 	private var gObject2s:Array<GameObject2>;
 	
+	private var objCount:Int = 0;
+	private var objCountTf:TextField;
+	
+	private var canvas:Sprite;
+	
 	public function new() 
 	{
 		super();
@@ -51,25 +56,31 @@ class Main extends Sprite
 		tf.text += "\nDPI: " + Capabilities.screenDPI;
 		tf.text += "\nresX: " + Capabilities.screenResolutionX + ", resY: " + Capabilities.screenResolutionY;
 		tf.text += "\nStage width: " + stage.stageWidth + ", height: " + stage.stageHeight;
-
 		addChild( tf );
-
+		
+		addChild( canvas = new Sprite() );
+		
+		objCountTf = new TextField();
+		objCountTf.background = true;
+		objCountTf.backgroundColor = 0xffffff;
+		objCountTf.y = tf.height + tf.y + 5;
+		addChild( objCountTf );
 		
 		GameObject.bounds = GameObject2.bounds = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
 		
 		gObjects = new Array<GameObject>();
 		gObject2s = new Array<GameObject2>();
 		
-		for ( i in 0...500 ) {
-			if ( USE_CANVAS ) {
-				var gobj2 = new GameObject2();
-				gObject2s.push( gobj2 );
-			} else {
-				var gobj = new GameObject();
-				gObjects.push( gobj );
-				addChild( gobj );
-			}
-		}
+		//for ( i in 0...500 ) {
+			//if ( USE_CANVAS ) {
+				//var gobj2 = new GameObject2();
+				//gObject2s.push( gobj2 );
+			//} else {
+				//var gobj = new GameObject();
+				//gObjects.push( gobj );
+				//addChild( gobj );
+			//}
+		//}
 	
 		if ( USE_CANVAS ) {
 			addEventListener( Event.ENTER_FRAME, onEnterFrame2 );
@@ -81,12 +92,19 @@ class Main extends Sprite
 		var fps:FPSCounter = new FPSCounter();
 		addChild( fps );
 
-		resize ();
+		resize();
 		
 		stage.addEventListener (Event.RESIZE, stage_onResize);
 	}
 	
 	private function onEnterFrame( ev:Event ):Void {
+		var gobj = new GameObject();
+		gObjects.push( gobj );
+		canvas.addChild( gobj );
+		
+		objCount++;
+		objCountTf.text = "Objects: " + objCount;
+		
 		for ( gobj in gObjects ) {
 			gobj.tick();
 		}
@@ -107,10 +125,15 @@ class Main extends Sprite
 	}
 	
 	private function onEnterFrame2( ev:Event ):Void {
-		graphics.clear();
+		var gobj2 = new GameObject2();
+		gObject2s.push( gobj2 );
+		objCount++;
+		objCountTf.text = "Objects: " + objCount;
+		
+		canvas.graphics.clear();
 		for ( gobj in gObject2s ) {
 			gobj.tick();
-			gobj.paint( graphics );
+			gobj.paint( canvas.graphics );
 		}
 	}
 	
@@ -120,7 +143,7 @@ class Main extends Sprite
 		stage.scaleMode = nme.display.StageScaleMode.NO_SCALE;
 		stage.align = nme.display.StageAlign.TOP_LEFT;
 		
-		Lib.current.addChild(new Main());
+		Lib.current.addChild( new Main() );
 	}
 	
 }
