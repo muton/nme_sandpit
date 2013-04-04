@@ -8,6 +8,8 @@ import nme.Lib;
 import nme.system.Capabilities;
 import nme.text.TextField;
 
+import com.rpkit.utils.FPSCounter;
+
 /**
  * ...
  * @author tim@muton.co.uk
@@ -47,6 +49,7 @@ class Main extends Sprite
 		tf.text += "\nStage width: " + stage.stageWidth + ", height: " + stage.stageHeight;
 
 		addChild( tf );
+
 		
 		GameObject.bounds = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
 		
@@ -57,6 +60,11 @@ class Main extends Sprite
 			gObjects.push( gobj );
 			addChild( gobj );
 		}
+
+
+		var fps:FPSCounter = new FPSCounter();
+		addChild( fps );
+
 
 		addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		
