@@ -10,7 +10,7 @@ import nme.geom.Rectangle;
 
 class GameObject extends Sprite {
 
-	private static var bounds:Rectangle = new Rectangle( 0, 0, 500, 400 );
+	public static var bounds:Rectangle = new Rectangle( 0, 0, 500, 400 );
 	
 	private var velocityX:Float = 0;
 	private var velocityY:Float = 0;
@@ -26,7 +26,7 @@ class GameObject extends Sprite {
 		graphics.endFill();
 		
 		x = bounds.left + Math.random() * bounds.width;
-		y = bounds.top = Math.random() * bounds.height;
+		y = bounds.top + Math.random() * bounds.height;
 	}
 	
 
