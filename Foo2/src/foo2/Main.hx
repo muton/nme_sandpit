@@ -9,7 +9,7 @@ import nme.Lib;
 import nme.system.Capabilities;
 import nme.text.TextField;
 
-import com.rpkit.utils.FPSCounter;
+import rpkit.utils.FPSCounter;
 
 /**
  * ...
