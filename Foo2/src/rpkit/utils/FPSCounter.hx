@@ -1,4 +1,4 @@
-package com.rpkit.utils;
+package rpkit.utils;
 
 import nme.display.Sprite;
 import nme.text.TextField;
