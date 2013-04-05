@@ -11,7 +11,7 @@ class ProjectClass extends FlxGame
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 		var ratioX:Float = stageWidth / 640;
 		var ratioY:Float = stageHeight / 480;
-		var ratio:Float = Math.min(ratioX, ratioY);
+		var ratio:Float = Math.min(ratioX, ratioY) * 2;
 		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), MenuState, ratio, 30, 30);
 	}
 }
