@@ -1,5 +1,11 @@
 package ;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import org.flixel.FlxButton;
 import org.flixel.FlxG;
+import org.flixel.FlxPath;
+import org.flixel.FlxRect;
+import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 
@@ -12,6 +18,9 @@ class PlayState extends FlxState
 {
 	private var debug:FlxText;
 	private var controls:FlxText;
+	
+	private var leftBtn:FlxSprite;
+	private var rightBtn:FlxSprite;
 
 	public function new() 
 	{
@@ -33,6 +42,19 @@ class PlayState extends FlxState
 		
 		add( debug );
 		add( controls );
+		
+		var bmpd = new BitmapData( 50, 50, false, 0xffff0000 );
+		leftBtn = new FlxSprite( 10, FlxG.height - 60, bmpd );
+		rightBtn = new FlxSprite( 70, leftBtn.y, bmpd );
+		
+		add( leftBtn );
+		add( rightBtn );
+		
+	}
+	
+	private function onClickBtn() 
+	{
+		
 	}
 	
 	override public function update():Void {
@@ -52,6 +74,16 @@ class PlayState extends FlxState
 		var touch = FlxG.touchManager;
 		var touches = touch.touches;
 		debug.text = "Touches length: " + ( touches == null ? "null" : Std.string( touches.length ) );
+		
+		for ( t in touches ) {
+			if ( !t.isActive() ) { continue; };
+			if ( leftBtn.overlapsPoint( t ) ) {
+				debug.text += " LEFT";
+			}
+			if ( rightBtn.overlapsPoint( t ) ) {
+				debug.text += " RIGHT";
+			}
+		}
 		
 		super.update();
 	}
