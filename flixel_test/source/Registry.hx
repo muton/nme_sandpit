@@ -7,6 +7,9 @@ package ;
 
 class Registry 
 {
+	public static var touch_left:Bool;
+	public static var touch_right:Bool;
+	public static var touch_fire:Bool;
 	
 	public static var player:Player;
 	public static var bullets:BulletManager;

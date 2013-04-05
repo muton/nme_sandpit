@@ -33,11 +33,11 @@ class Player extends FlxSprite
 		
 		var maxX = FlxG.width - width;
 		
-		if ( keys.LEFT && x > 0 ) {
-			velocity.x -= xSpeed;
+		if ( ( keys.LEFT || Registry.touch_left ) && x > 0 ) {
+			moveLeft();
 		}
-		if ( keys.RIGHT && x < maxX ) {
-			velocity.x += xSpeed;
+		if ( ( keys.RIGHT || Registry.touch_right ) && x < maxX ) {
+			moveRight();
 		}
 		if ( keys.UP && y >= 100 ) {
 			velocity.y -= ySpeed;
@@ -54,25 +54,41 @@ class Player extends FlxSprite
 			x = maxX;
 		}
 		
-		if ( keys.CONTROL && Lib.getTimer() > lastFired + bulletDelay ) {
-           switch (fireType)
-            {
-                case 1:
-                    Registry.bullets.fire(Std.int(x + 5), Std.int(y) );
- 
-                case 2:
-                    Registry.bullets.fire(Std.int(x), Std.int(y));
-                    Registry.bullets.fire(Std.int(x + 10), Std.int(y));
- 
-                case 3:
-                    Registry.bullets.fire(Std.int(x - 8), Std.int(y));
-                    Registry.bullets.fire(Std.int(x), Std.int(y - 4));
-                    Registry.bullets.fire(Std.int(x + 10), Std.int(y - 4));
-                    Registry.bullets.fire(Std.int(x + 18), Std.int(y));
-            }
-            //Use the awsome nme get timer that will work on all supported runtimes
-            lastFired = Lib.getTimer();			
+		if ( ( keys.CONTROL || Registry.touch_fire ) && Lib.getTimer() > lastFired + bulletDelay ) {
+           fire(); 
 		}
+	}
+	
+	public function fire():Void 
+	{
+		switch (fireType)
+		 {
+			 case 1:
+				 Registry.bullets.fire(Std.int(x + 5), Std.int(y) );
+	
+			 case 2:
+				 Registry.bullets.fire(Std.int(x), Std.int(y));
+				 Registry.bullets.fire(Std.int(x + 10), Std.int(y));
+	
+			 case 3:
+				 Registry.bullets.fire(Std.int(x - 8), Std.int(y));
+				 Registry.bullets.fire(Std.int(x), Std.int(y - 4));
+				 Registry.bullets.fire(Std.int(x + 10), Std.int(y - 4));
+				 Registry.bullets.fire(Std.int(x + 18), Std.int(y));
+		 }
+		 //Use the awsome nme get timer that will work on all supported runtimes
+		 lastFired = Lib.getTimer();			
+	
+	}
+	
+	public function moveLeft():Void 
+	{
+		velocity.x -= xSpeed;
+	}
+	
+	public function moveRight():Void 
+	{
+		velocity.x += xSpeed;
 	}
 	
 }

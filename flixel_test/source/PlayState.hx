@@ -19,8 +19,7 @@ class PlayState extends FlxState
 	private var debug:FlxText;
 	private var controls:FlxText;
 	
-	private var leftBtn:FlxSprite;
-	private var rightBtn:FlxSprite;
+	private var touchUI:TouchUI;
 
 	public function new() 
 	{
@@ -43,13 +42,8 @@ class PlayState extends FlxState
 		add( debug );
 		add( controls );
 		
-		var bmpd = new BitmapData( 50, 50, false, 0xffff0000 );
-		leftBtn = new FlxSprite( 10, FlxG.height - 60, bmpd );
-		rightBtn = new FlxSprite( 70, leftBtn.y, bmpd );
-		
-		add( leftBtn );
-		add( rightBtn );
-		
+		touchUI = new TouchUI();
+		add( touchUI );
 	}
 	
 	private function onClickBtn() 
@@ -69,20 +63,6 @@ class PlayState extends FlxState
 			player.fireType = 2;
 		} else if ( keys.justPressed( "THREE" ) ) {
 			player.fireType = 3;
-		}
-		
-		var touch = FlxG.touchManager;
-		var touches = touch.touches;
-		debug.text = "Touches length: " + ( touches == null ? "null" : Std.string( touches.length ) );
-		
-		for ( t in touches ) {
-			if ( !t.isActive() ) { continue; };
-			if ( leftBtn.overlapsPoint( t ) ) {
-				debug.text += " LEFT";
-			}
-			if ( rightBtn.overlapsPoint( t ) ) {
-				debug.text += " RIGHT";
-			}
 		}
 		
 		super.update();
