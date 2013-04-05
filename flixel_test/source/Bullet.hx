@@ -13,8 +13,14 @@ class Bullet extends FlxSprite
 	
 	public function new() 
 	{
-		super( 0, 0, "assets/data/logo.png" );
+		super( 0, 0, null );
 		exists = false;									// exists bool tells engine whether to render or not
+		
+		loadGraphic( "assets/puff_sheet.png", true, false, 50, 50, true );
+		addAnimation( "basic", [0, 1, 2, 3, 4], 7, true );
+		
+		play( "basic" );
+		
 	}
 	
 	public function fire( x:Int, y:Int ) 
