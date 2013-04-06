@@ -22,8 +22,8 @@ class Player extends FlxSprite
 		//super( FlxG.width / 2, FlxG.height - 16, "assets/data/cursor.png" );
 		super( FlxG.width / 2, FlxG.height - 16, null );
 		
-		loadGraphic( "assets/triangle_sheet.png", true, false, 100, 50, true );
-		addAnimation( "basic", [0, 1, 2], 10, true );
+		loadGraphic( "assets/triangle_sheet.png", true, true, 100, 50, true );
+		addAnimation( "basic", [0, 1, 2], 1, true );
 		
 		play( "basic" );
 	}

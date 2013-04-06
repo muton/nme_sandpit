@@ -31,6 +31,8 @@ class MenuState extends FlxState
 		var startBtn =  new FlxButton( 0, 0, "Start", onStartClick );
 		add( startBtn );
 		FlxDisplay.screenCenter( startBtn, true, true );
+		
+		add( new Dragon() );
 	}
 	
 	private function onStartClick() 
