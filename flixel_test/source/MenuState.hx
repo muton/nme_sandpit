@@ -1,10 +1,13 @@
 package;
 
+import nme.display.BitmapData;
 import nme.Assets;
 import nme.geom.Rectangle;
 import nme.net.SharedObject;
 import org.flixel.FlxButton;
+import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
+import org.flixel.FlxParticle;
 import org.flixel.FlxPath;
 import org.flixel.FlxSave;
 import org.flixel.FlxSprite;
@@ -33,6 +36,18 @@ class MenuState extends FlxState
 		FlxDisplay.screenCenter( startBtn, true, true );
 		
 		add( new Dragon() );
+		
+		var emitter = new FlxEmitter( 100, 50, 30 );
+		var colours:Array<UInt> = [ 0xFFFFFF00, 0xFFFFFF00, 0xFFFF8000, 0xFFFF8000, 0xFF00FFFF ];
+		var bmpd = new BitmapData( colours.length, 1, false );
+		for ( i in 0...colours.length ) {
+			bmpd.setPixel( i, 0, colours[i] );
+		}
+		emitter.makeParticles( bmpd, 50, 0, true );
+		emitter.start( false, 1, 0.01 );
+		
+		
+		add( emitter );
 	}
 	
 	private function onStartClick() 
