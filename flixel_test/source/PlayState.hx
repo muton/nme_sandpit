@@ -8,6 +8,8 @@ import org.flixel.FlxRect;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.plugin.photonstorm.FlxDisplay;
+import org.flixel.plugin.photonstorm.FlxPowerTools;
 
 /**
  * ...
@@ -44,6 +46,10 @@ class PlayState extends FlxState
 		
 		touchUI = new TouchUI();
 		add( touchUI );
+		
+		var alien = new AlienBlob();
+		FlxDisplay.screenCenter( alien, true, true );
+		add( alien );
 	}
 	
 	private function onClickBtn() 
