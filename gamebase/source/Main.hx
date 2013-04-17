@@ -1,6 +1,7 @@
 package;
 
 import muton.gamebase.ProjectClass;
+import muton.nme.Tweaks;
 import nme.display.StageAlign;
 import nme.display.StageScaleMode;
 import nme.display.Sprite;
@@ -53,6 +54,7 @@ class Main extends Sprite {
 	
 	// Entry point
 	public static function main() {
+		Tweaks.redirectTrace();
 		Lib.current.addChild( new Main() );
 	}
 	
