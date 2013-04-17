@@ -7,6 +7,7 @@ import nme.net.SharedObject;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxObject;
 import org.flixel.FlxPath;
 import org.flixel.FlxSave;
 import org.flixel.FlxSprite;
@@ -36,7 +37,7 @@ class GameState extends FlxState {
 		player = new Player( 20, 20 );
 		add( player );
 		
-		FlxG.camera.setBounds( 0, 0, map.width, map.height );
+		FlxG.camera.setBounds( 0, 0, map.width, map.height, true );
 		FlxG.camera.follow( player, FlxCamera.STYLE_TOPDOWN, null, 3 );
 	}
 	
@@ -45,6 +46,8 @@ class GameState extends FlxState {
 	}
 
 	override public function update():Void {
+		FlxG.collide( player, map );
 		super.update();
 	}	
+	
 }
