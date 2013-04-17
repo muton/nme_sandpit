@@ -5,6 +5,7 @@ import nme.Assets;
 import nme.geom.Rectangle;
 import nme.net.SharedObject;
 import org.flixel.FlxButton;
+import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPath;
 import org.flixel.FlxSave;
@@ -34,6 +35,9 @@ class GameState extends FlxState {
 	
 		player = new Player( 20, 20 );
 		add( player );
+		
+		FlxG.camera.setBounds( 0, 0, map.width, map.height );
+		FlxG.camera.follow( player, FlxCamera.STYLE_TOPDOWN, null, 3 );
 	}
 	
 	override public function destroy():Void {
