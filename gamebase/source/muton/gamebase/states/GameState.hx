@@ -157,9 +157,14 @@ class GameState extends FlxState {
 					map.ray( new FlxPoint( player.x, player.y ), new FlxPoint( x * 16 + 8, y * 16 + 8), null, 2 ) ? tileNum : 0, true );
 			}
 		}
-	
+		
+		Lambda.iter( collectibles.members, iter_adjustCollectible );
 	}
 	
-	
+	private function iter_adjustCollectible( coll:Collectible ) {
+		if ( coll.exists ) {
+			coll.alpha = floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 9;
+		}
+	}
 	
 }
