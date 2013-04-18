@@ -20,6 +20,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxPath;
 import org.flixel.FlxPoint;
+import org.flixel.FlxRect;
 import org.flixel.FlxSave;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
@@ -62,7 +63,9 @@ class GameState extends FlxState {
 		map.loadMap( 
 			Assets.getText( conf.levels[0].mapPath ), 
 			Assets.getBitmapData( "assets/tiles/autotiles_dark_16x16.png" ),
+			//Assets.getBitmapData( "assets/tiles/autotiles_16x16.png" ),
 			16, 16, FlxTilemap.ALT );
+		//map.follow();	// causes camera bounds to be set too
 			
 		floor = new FlxTilemap();
 		floor.drawDebug();
@@ -95,6 +98,8 @@ class GameState extends FlxState {
 		
 		//FlxG.camera.setBounds( 0, 0, map.width, map.height, true );
 		FlxG.camera.follow( player, FlxCamera.STYLE_TOPDOWN, null, 3 );
+		// make the world bigger so tilemap collisions work, but camera doesn't stop at edge of play area
+		FlxG.worldBounds.copyFrom( new FlxRect( -100, -100, map.width + 100, map.height + 100 ) );
 		
 		bg.makeGraphic( Std.int( map.width ), Std.int( map.height ), 0xFF000000 );
 		//Lighting.redrawBg( bg, lightSources, map.width, map.height );
@@ -108,11 +113,12 @@ class GameState extends FlxState {
 	}
 
 	override public function update():Void {
+		super.update();
 		FlxG.collide( player, map );
+		
 		//var screenXY = player.getScreenXY();
 		//darkness.makeGraphic( FlxG.width, FlxG.height, 0xff000000, true );
 		//darkness.stamp( lighting, Std.int( screenXY.x - 45 ), Std.int( screenXY.y - 45 ) );
-		super.update();
 		//
 		//floor.setTile( Std.int( player.x / 16 ), Std.int( player.y / 16 ), 9, true );
 		
