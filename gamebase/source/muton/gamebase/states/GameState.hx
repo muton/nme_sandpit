@@ -1,5 +1,6 @@
 package muton.gamebase.states;
 
+import muton.gamebase.Config;
 import muton.gamebase.util.Lighting;
 import nme.display.BitmapData;
 import nme.display.Bitmap;
@@ -29,6 +30,8 @@ import org.flixel.plugin.photonstorm.FlxDisplay;
 
 class GameState extends FlxState {
 	
+	private var conf:Config;
+	
 	private var bg:FlxSprite;
 	private var floor:FlxTilemap;
 	private var map:FlxTilemap;
@@ -44,6 +47,8 @@ class GameState extends FlxState {
 	override public function create():Void {
 		super.create();
 
+		conf = new Config( "assets/conf/config.json" );
+		
 		lightSources = new Array<FlxPoint>();
 		lightSources.push( new FlxPoint( 20, 20 ) );
 		lightSources.push( new FlxPoint( 100, 40 ) );
@@ -102,12 +107,12 @@ class GameState extends FlxState {
 
 	override public function update():Void {
 		FlxG.collide( player, map );
-		var screenXY = player.getScreenXY();
-		darkness.makeGraphic( FlxG.width, FlxG.height, 0xff000000, true );
-		darkness.stamp( lighting, Std.int( screenXY.x - 45 ), Std.int( screenXY.y - 45 ) );
+		//var screenXY = player.getScreenXY();
+		//darkness.makeGraphic( FlxG.width, FlxG.height, 0xff000000, true );
+		//darkness.stamp( lighting, Std.int( screenXY.x - 45 ), Std.int( screenXY.y - 45 ) );
 		super.update();
-		
-		floor.setTile( Std.int( player.x / 16 ), Std.int( player.y / 16 ), 9, true );
+		//
+		//floor.setTile( Std.int( player.x / 16 ), Std.int( player.y / 16 ), 9, true );
 		
 		updateFloorLighting();
 	}	
@@ -126,10 +131,10 @@ class GameState extends FlxState {
 		for ( x in Std.int( Math.max( curTileX - 11, 0 ) )...Std.int( Math.min( curTileX + 12, floor.widthInTiles  ) ) ) {
 			for ( y in Std.int( Math.max( curTileY - 11, 0 ) )...Std.int( Math.min( curTileY + 12, floor.heightInTiles ) ) ) {
 				var dist = Math.sqrt( Math.pow( curTileX - x, 2 ) + Math.pow( curTileY - y, 2 ) );
-				var tileNum = 9 - Std.int( Math.min( 9, dist ) );
+				var tileNum = Std.int( Math.ceil( 9 - Math.min( 9, dist ) ) );
 				//trace( Std.format( 'x:$x y:$y dist:$dist tileNum:$tileNum' ) );
 				floor.setTile( x, y, 
-					map.ray( new FlxPoint( player.x, player.y ), new FlxPoint( x * 16, y * 16 ), null, 10 ) ? tileNum : 0, true );
+					map.ray( new FlxPoint( player.x, player.y ), new FlxPoint( x * 16 + 8, y * 16 + 8), null, 2 ) ? tileNum : 0, true );
 			}
 		}
 	

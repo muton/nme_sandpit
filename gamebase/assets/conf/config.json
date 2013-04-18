@@ -1,0 +1,17 @@
+{
+	"enemies": [
+		{
+			"id": "simpleBot",
+			"health": 2,
+			"mass": 10,
+			"spritePath": "assets/sprites/simple_bot_sheet.png",
+			"spriteWidth": 25,
+			"spriteHeight": 25,
+			"flyAnim": {
+				"frameList": [1, 2, 3, 2],
+				"fps": 6
+			},
+			"deadFrame": 0
+		}
+	]
+}
