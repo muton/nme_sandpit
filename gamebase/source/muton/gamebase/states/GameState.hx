@@ -1,6 +1,7 @@
 package muton.gamebase.states;
 
 import muton.gamebase.Config;
+import muton.gamebase.game.Collectible;
 import muton.gamebase.util.Lighting;
 import nme.display.BitmapData;
 import nme.display.Bitmap;
@@ -26,6 +27,7 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxTilemap;
+import org.flixel.FlxTypedGroup;
 import org.flixel.FlxU;
 import org.flixel.plugin.photonstorm.FlxDisplay;
 
@@ -40,6 +42,7 @@ class GameState extends FlxState {
 	private var lighting:FlxSprite;
 	
 	private var lightSources:Array<FlxPoint>;
+	private var collectibles:FlxTypedGroup<Collectible>;
 	private var player:Player;
 	
 	private var lastFloorTileX:Int;
@@ -84,11 +87,14 @@ class GameState extends FlxState {
 		player = new Player( 20, 20 );
 		add( player );
 		
-		darkness = new FlxSprite( 0, 0 );
-		darkness.makeGraphic( FlxG.width, FlxG.height, 0xFF000000 );
-		darkness.scrollFactor.x = darkness.scrollFactor.y = 0;
-		darkness.blend = BlendMode.MULTIPLY;
-		darkness.active = false;
+		collectibles = new FlxTypedGroup<Collectible>( 20 );
+		add( collectibles );
+		
+		//darkness = new FlxSprite( 0, 0 );
+		//darkness.makeGraphic( FlxG.width, FlxG.height, 0xFF000000 );
+		//darkness.scrollFactor.x = darkness.scrollFactor.y = 0;
+		//darkness.blend = BlendMode.MULTIPLY;
+		//darkness.active = false;
 		//add( darkness );
 		
 		lighting = new FlxSprite( 0, 0 );
@@ -105,6 +111,12 @@ class GameState extends FlxState {
 		//Lighting.redrawBg( bg, lightSources, map.width, map.height );
 		
 		
+		for ( itm in conf.levels[0].items ) {
+			var coll = collectibles.recycle( Collectible );
+			coll.setup( conf.collectibles.get( itm.id ) );
+			coll.x = itm.x;
+			coll.y = itm.y;
+		}
 	}
 	
 	

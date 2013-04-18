@@ -17,7 +17,24 @@
 	"levels": [
 		{
 			"id": "level_1",
-			"mapPath": "assets/conf/level1_map.txt"
+			"mapPath": "assets/conf/level1_map.txt",
+			"items": [
+				{ "id": "example", "x": 100, "y": 20 },
+				{ "id": "example", "x": 200, "y": 60 },
+				{ "id": "example", "x": 100, "y": 300 }
+			]
+		}
+	],
+	"collectibles": [
+		{
+			"id": "example",
+			"spritePath": "assets/sprites/example_collectible_sheet.png",
+			"spriteWidth": 12,
+			"spriteHeight": 12,
+			"anim": {
+				"frameList": [ 0, 1, 2],
+				"fps": 5
+			}
 		}
 	]
 }
