@@ -17,9 +17,9 @@ class MenuState extends FlxState {
 	
 	override public function create():Void {
 #if !neko
-		FlxG.bgColor = 0xFFA2AC53;
+		FlxG.bgColor = 0xFF000000;
 #else
-		FlxG.camera.bgColor = {rgb: 0xA2AC53, a: 0xff};
+		FlxG.camera.bgColor = {rgb: 0x000000, a: 0xff};
 #end
 #if !FLX_NO_MOUSE
 		FlxG.mouse.show();

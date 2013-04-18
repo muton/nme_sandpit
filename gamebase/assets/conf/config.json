@@ -13,5 +13,11 @@
 			},
 			"deadFrame": 0
 		}
+	],
+	"levels": [
+		{
+			"id": "level_1",
+			"mapPath": "assets/conf/level1_map.txt"
+		}
 	]
 }

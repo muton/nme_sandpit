@@ -8,7 +8,8 @@ import nme.Assets;
  */
 
 typedef GameConf = {
-	enemies:Array<EnemyInfo>
+	enemies:Array<EnemyInfo>,
+	levels:Array<LevelInfo>
 }
 
 typedef AnimInfo = {
@@ -28,25 +29,26 @@ typedef EnemyInfo = {
 	deadFrame:Int
 }
 
-typedef CollectibleInfo = {
+typedef LevelInfo = {
 	id:String,
-	spritePath:String,
-	spriteWidth:Int,
-	spriteHeight:Int,
-	anim:AnimInfo
+	mapPath:String,
+	
 }
  
 class Config {
 
 	public var enemies:Hash<EnemyInfo>;
+	public var levels:Array<LevelInfo>;
 	
 	public function new( path:String ) {
-		var dvrConf:GameConf = Json.parse( Assets.getText( path ) );
+		var conf:GameConf = Json.parse( Assets.getText( path ) );
 		
 		enemies = new Hash<EnemyInfo>(); 
-		for ( ei in dvrConf.enemies ) {
+		for ( ei in conf.enemies ) {
 			enemies.set( ei.id, ei );
 		}
+		
+		levels = conf.levels;
 	}
 	
 }

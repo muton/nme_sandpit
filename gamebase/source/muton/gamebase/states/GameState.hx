@@ -60,7 +60,7 @@ class GameState extends FlxState {
 		
 		map = new FlxTilemap();
 		map.loadMap( 
-			Assets.getText( "assets/pathfinding/pathfinding_map.txt" ), 
+			Assets.getText( conf.levels[0].mapPath ), 
 			Assets.getBitmapData( "assets/tiles/autotiles_dark_16x16.png" ),
 			16, 16, FlxTilemap.ALT );
 			
@@ -72,7 +72,7 @@ class GameState extends FlxState {
 		for ( i in 0...map.totalTiles ) { blankArr.push( 0 ); }
 		floor.loadMap(
 			blankArr, 
-			Lighting.genLightMapTileSet( 10, 16, 16, 0.8 ),
+			Lighting.genLightMapTileSet( 10, 16, 16, 0.65 ),
 			16, 16, FlxTilemap.OFF, 0, 1, 0 );
 			
 		add( floor );
@@ -93,11 +93,13 @@ class GameState extends FlxState {
 		lighting.pixels.draw( Lighting.circSprite( 70 ) );
 		lighting.blend = BlendMode.SCREEN;
 		
-		FlxG.camera.setBounds( 0, 0, map.width, map.height, true );
+		//FlxG.camera.setBounds( 0, 0, map.width, map.height, true );
 		FlxG.camera.follow( player, FlxCamera.STYLE_TOPDOWN, null, 3 );
 		
 		bg.makeGraphic( Std.int( map.width ), Std.int( map.height ), 0xFF000000 );
 		//Lighting.redrawBg( bg, lightSources, map.width, map.height );
+		
+		
 	}
 	
 	
