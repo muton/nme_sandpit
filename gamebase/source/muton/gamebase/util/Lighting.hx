@@ -18,6 +18,7 @@ import org.flixel.FlxSprite;
 class Lighting {
 
 	private static var bgFill:BitmapData;
+	private static var circSpriteCache:IntHash<Sprite>;
 
 	public static inline function redrawBg( bg:FlxSprite, lightSources:Array<FlxPoint>, width:Float, height:Float ) {
 		var flxScale = FlxG.camera.zoom;
@@ -51,12 +52,7 @@ class Lighting {
 			}
 		}
 		
-		var mtr = new Matrix();
-		mtr.createGradientBox( radius * 2, radius * 2, 0, 0, 0 );
-		var circ = new Sprite();
-		circ.graphics.beginGradientFill( GradientType.RADIAL, [0xFFFF00, 0xFF8000], [0.7, 0], [0, 255], mtr );
-		circ.graphics.drawCircle( radius, radius, radius );
-		circ.graphics.endFill();
+		var circ = circSprite( Std.int( radius ) );
 		var pm = new Matrix();
 		
 		for ( pt in lightSources ) {
@@ -64,6 +60,37 @@ class Lighting {
 			bmpd.draw( circ, pm, null, BlendMode.LIGHTEN );
 		}
 		bmpd.unlock();
+	}
+	
+	public static inline function updateLighting( darkness:FlxSprite, movingLS:FlxSprite, lightSources:Array<FlxPoint> ) {
+		
+		//var screenXY = player.getScreenXY();
+		//darkness.makeGraphic( FlxG.width, FlxG.height, 0xff000000, true );
+		//darkness.stamp( lighting, Std.int( player.x - 45 ), Std.int( player.y - 45 ) );
 		
 	}
+	
+	public static inline function circSprite( radius:Int ):Sprite {
+		var mtr = new Matrix();
+		mtr.createGradientBox( radius * 2, radius * 2, 0, 0, 0 );
+		var circ = new Sprite();
+		circ.graphics.beginGradientFill( GradientType.RADIAL, [0xFFFF00, 0xFF8000], [0.7, 0], [0, 255], mtr );
+		circ.graphics.drawCircle( radius, radius, radius );
+		circ.graphics.endFill();
+		return circ;
+	}
+	
+	
+	public static inline function genLightMapTileSet( numTiles:Int, tileWidth:Int, tileHeight:Int, maxAlpha:Float ):BitmapData {
+		var bmpd = new BitmapData( numTiles * tileWidth, tileHeight, true, 0x00000000 );
+		var alphaIncrement = maxAlpha / numTiles * 0xff;
+		var rect:Rectangle = new Rectangle( 0, 0, tileWidth, tileHeight );
+		var baseColour = 0x00FFFFB9;
+		for ( i in 0...numTiles ) {
+			rect.x = i * tileWidth;
+			bmpd.fillRect( rect, baseColour + ( Std.int( alphaIncrement * i ) << 24 ) );
+		}
+		return bmpd;
+	}
+	
 }
