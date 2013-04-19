@@ -12,7 +12,8 @@ typedef GameConf = {
 	enemies:Array<EnemyInfo>,
 	levels:Array<LevelInfo>,
 	collectibles:Array<CollectibleInfo>,
-	capSequences:Array<CaptionSequence>
+	capSequences:Array<CaptionSequence>,
+	cutScenes:Array<CutScene>
 }
 
 typedef AnimInfo = {
@@ -59,9 +60,9 @@ typedef EnemyPosition = { > ItemPosition,
 
 typedef Caption = {
 	label:String,
-	time:Int,
+	?time:Int,
 	duration:Int,
-	placeId:String
+	?placeId:String
 }
 
 typedef CaptionPlacement = { 
@@ -80,12 +81,24 @@ typedef CaptionSequence = {
 	timeline:Array<Caption>
 }
 
+typedef CutScene = {
+	id:String,
+	timeline:Array<CutSceneFrame>
+}
+
+typedef CutSceneFrame = {
+	duration:Int,
+	imagePath:String,
+	captions:Array<Caption>
+}
+
 class Config {
 
 	public var enemies:Hash<EnemyInfo>;
 	public var levels:Array<LevelInfo>;
 	public var collectibles:Hash<CollectibleInfo>;
 	public var capSequences:Hash<CaptionSequence>;
+	private var cutScenes:Hash<CutScene>;
 	
 	public function new( path:String ) {
 		var conf:GameConf = Json.parse( Assets.getText( path ) );
@@ -103,6 +116,11 @@ class Config {
 		capSequences = new Hash<CaptionSequence>();
 		for ( cs in conf.capSequences ) {
 			capSequences.set( cs.id, cs );
+		}
+		
+		cutScenes = new Hash<CutScene>();
+		for ( cut in conf.cutScenes ) {
+			cutScenes.set( cut.id, cut );
 		}
 		
 		levels = conf.levels;

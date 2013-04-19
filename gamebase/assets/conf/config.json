@@ -56,5 +56,36 @@
 				{ "label": "...yet", "time": 8, "duration": 4, "placeId": "br" }
 			]
 		}
+	],
+	"cutScenes": [
+		{
+			"id": "demo",
+			"timeline": [
+				{
+					"duration": 10,
+					"imagePath": "assets/cutscenes/demo_img_1.png",
+					"captions": [
+						{ "label": "This is a demo", "duration": 4 },
+						{ "label": "The text is unrelated to the picture", "duration": 6 }
+					]
+				},
+				{
+					"duration": 5,
+					"imagePath": "assets/cutscenes/demo_img_2.png",
+					"captions": [
+						{ "label": "Just another picture", "duration": 5 }
+					]
+				},
+				{
+					"duration": 8,
+					"imagePath": "assets/cutscenes/demo_img_3.png",
+					"captions": [
+						{ "label": "And finally...", "duration": 2 },
+						{ "label": "...a cute...", "duration": 2 },
+						{ "label": "...little squirrel.", "duration": 2 }
+					]
+				}
+			]
+		}
 	]
 }
