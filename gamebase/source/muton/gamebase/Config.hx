@@ -1,6 +1,7 @@
 package muton.gamebase;
 import haxe.Json;
 import nme.Assets;
+import org.flixel.FlxPath;
 
 /**
  * ...
@@ -78,4 +79,11 @@ class Config {
 		levels = conf.levels;
 	}
 	
+	public static function routeToPath( route:Array<Array<Int>> ):FlxPath {
+		var path = new FlxPath();
+		for ( coord in route ) {
+			path.add( coord[0], coord[1] );
+		}
+		return path;
+	}
 }

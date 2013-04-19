@@ -131,11 +131,12 @@ class GameState extends FlxState {
 		}
 		
 		for ( en in conf.levels[0].enemies ) {
-			var enemy = enemies.recycle( Enemy );
+			var enemy:Enemy = enemies.recycle( Enemy );
 			enemy.setup( conf.enemies.get( en.id ) );
 			enemy.x = en.x;
 			enemy.y = en.y;
-			//TODO: Route
+			enemy.followPath( Config.routeToPath( en.route ), 100, FlxObject.PATH_LOOP_BACKWARD );
+		
 		}
 	}
 	
@@ -155,6 +156,8 @@ class GameState extends FlxState {
 		//floor.setTile( Std.int( player.x / 16 ), Std.int( player.y / 16 ), 9, true );
 		
 		updateFloorLighting();
+		
+		Lambda.iter( enemies.members, iter_adjustSprite );
 	}	
 		
 	private function updateFloorLighting():Void {
@@ -179,7 +182,6 @@ class GameState extends FlxState {
 		}
 		
 		Lambda.iter( collectibles.members, iter_adjustSprite );
-		Lambda.iter( enemies.members, iter_adjustSprite );
 		
 		FlxG.collide( player, collectibles, collide_collectItem );
 	}
