@@ -2,6 +2,7 @@ package muton.gamebase.states;
 
 import muton.gamebase.Config;
 import muton.gamebase.game.Collectible;
+import muton.gamebase.game.TouchUI;
 import muton.gamebase.util.Lighting;
 import nme.display.BitmapData;
 import nme.display.Bitmap;
@@ -51,6 +52,8 @@ class GameState extends FlxState {
 	override public function create():Void {
 		super.create();
 
+		FlxG.mouse.hide();
+		
 		conf = new Config( "assets/conf/config.json" );
 		
 		lightSources = new Array<FlxPoint>();
@@ -90,6 +93,10 @@ class GameState extends FlxState {
 		collectibles = new FlxTypedGroup<Collectible>( 20 );
 		add( collectibles );
 		
+#if mobile		
+		add( new TouchUI( false ) );
+#end		
+
 		//darkness = new FlxSprite( 0, 0 );
 		//darkness.makeGraphic( FlxG.width, FlxG.height, 0xFF000000 );
 		//darkness.scrollFactor.x = darkness.scrollFactor.y = 0;
@@ -109,7 +116,6 @@ class GameState extends FlxState {
 		
 		bg.makeGraphic( Std.int( map.width ), Std.int( map.height ), 0xFF000000 );
 		//Lighting.redrawBg( bg, lightSources, map.width, map.height );
-		
 		
 		for ( itm in conf.levels[0].items ) {
 			var coll = collectibles.recycle( Collectible );
