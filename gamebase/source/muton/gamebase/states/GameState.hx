@@ -5,6 +5,7 @@ import muton.gamebase.game.Collectible;
 import muton.gamebase.game.Enemy;
 import muton.gamebase.game.TouchUI;
 import muton.gamebase.util.Lighting;
+import muton.gamebase.util.TextUtil;
 import nme.display.BitmapData;
 import nme.display.Bitmap;
 import nme.display.BlendMode;
@@ -20,6 +21,7 @@ import nme.net.SharedObject;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxPath;
 import org.flixel.FlxPoint;
@@ -47,6 +49,7 @@ class GameState extends FlxState {
 	private var collectibles:FlxTypedGroup<Collectible>;
 	private var enemies:FlxTypedGroup<Enemy>;
 	private var player:Player;
+	private var overlay:FlxTypedGroup<FlxGroup>;
 	
 	private var lastFloorTileX:Int;
 	private var lastFloorTileY:Int;
@@ -98,6 +101,8 @@ class GameState extends FlxState {
 		player = new Player( 20, 20 );
 		add( player );
 		
+		overlay = new FlxTypedGroup<FlxGroup>( 10 );
+		add( overlay );
 		
 #if mobile		
 		add( new TouchUI( false ) );
@@ -138,6 +143,9 @@ class GameState extends FlxState {
 			enemy.followPath( Config.routeToPath( en.route ), 100, FlxObject.PATH_LOOP_BACKWARD );
 		
 		}
+		
+		overlay.add( TextUtil.genCaption( "Test caption", 0xFF8000, 50, 20, 100, true, true, 4 ) ); 
+		overlay.add( TextUtil.genCaption( "Another", 0x0000FF, 50, 20, 100, false, false, 7 ) ); 
 	}
 	
 	
