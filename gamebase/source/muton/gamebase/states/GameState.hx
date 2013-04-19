@@ -5,38 +5,22 @@ import muton.gamebase.Config;
 import muton.gamebase.CutScenePlayer;
 import muton.gamebase.game.Collectible;
 import muton.gamebase.game.Enemy;
+import muton.gamebase.game.Player;
 import muton.gamebase.game.TouchUI;
 import muton.gamebase.util.Lighting;
-import muton.gamebase.util.TextUtil;
-import nme.display.BitmapData;
-import nme.display.Bitmap;
-import nme.display.BlendMode;
-import nme.display.GradientType;
-import nme.display.Sprite;
-import muton.gamebase.game.Player;
 import nme.Assets;
-import nme.display.Graphics;
+import nme.display.BlendMode;
 import nme.events.Event;
-import nme.geom.Matrix;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.net.SharedObject;
-import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
-import org.flixel.FlxPath;
 import org.flixel.FlxPoint;
 import org.flixel.FlxRect;
-import org.flixel.FlxSave;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
-import org.flixel.FlxText;
 import org.flixel.FlxTilemap;
 import org.flixel.FlxTypedGroup;
-import org.flixel.FlxU;
-import org.flixel.plugin.photonstorm.FlxDisplay;
 
 class GameState extends FlxState {
 	
@@ -214,7 +198,8 @@ class GameState extends FlxState {
 	
 	private function iter_adjustSprite( coll:FlxSprite ) {
 		if ( coll.exists ) {
-			coll.alpha = floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 9;
+			var factor:Int = Std.int( 0xff * floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 9 );
+			coll.color = 0xff << 25 | factor << 16 | factor << 8 | factor << 0;
 		}
 	}
 	
