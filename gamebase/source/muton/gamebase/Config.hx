@@ -11,7 +11,8 @@ import org.flixel.FlxPath;
 typedef GameConf = {
 	enemies:Array<EnemyInfo>,
 	levels:Array<LevelInfo>,
-	collectibles:Array<CollectibleInfo>
+	collectibles:Array<CollectibleInfo>,
+	capSequences:Array<CaptionSequence>
 }
 
 typedef AnimInfo = {
@@ -56,12 +57,35 @@ typedef EnemyPosition = { > ItemPosition,
 	route:Array<Array<Int>>
 }
 
+typedef Caption = {
+	label:String,
+	time:Int,
+	duration:Int,
+	placeId:String
+}
+
+typedef CaptionPlacement = { 
+	id:String,
+	x:Int,
+	y:Int,
+	width:Int,
+	color:String,
+	?fromRight:Bool,
+	?fromBottom:Bool,
+}
+
+typedef CaptionSequence = {
+	id:String,
+	placements:Array<CaptionPlacement>,
+	timeline:Array<Caption>
+}
 
 class Config {
 
 	public var enemies:Hash<EnemyInfo>;
 	public var levels:Array<LevelInfo>;
 	public var collectibles:Hash<CollectibleInfo>;
+	public var capSequences:Hash<CaptionSequence>;
 	
 	public function new( path:String ) {
 		var conf:GameConf = Json.parse( Assets.getText( path ) );
@@ -74,6 +98,11 @@ class Config {
 		collectibles = new Hash<CollectibleInfo>();
 		for ( ci in conf.collectibles ) {
 			collectibles.set( ci.id, ci );
+		}
+		
+		capSequences = new Hash<CaptionSequence>();
+		for ( cs in conf.capSequences ) {
+			capSequences.set( cs.id, cs );
 		}
 		
 		levels = conf.levels;

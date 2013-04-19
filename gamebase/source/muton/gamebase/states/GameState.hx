@@ -1,5 +1,6 @@
 package muton.gamebase.states;
 
+import muton.gamebase.CaptionPlayer;
 import muton.gamebase.Config;
 import muton.gamebase.game.Collectible;
 import muton.gamebase.game.Enemy;
@@ -38,6 +39,7 @@ import org.flixel.plugin.photonstorm.FlxDisplay;
 class GameState extends FlxState {
 	
 	private var conf:Config;
+	private var captions:CaptionPlayer;
 	
 	private var bg:FlxSprite;
 	private var floor:FlxTilemap;
@@ -103,6 +105,7 @@ class GameState extends FlxState {
 		
 		overlay = new FlxTypedGroup<FlxGroup>( 10 );
 		add( overlay );
+		captions = new CaptionPlayer( overlay );
 		
 #if mobile		
 		add( new TouchUI( false ) );
@@ -144,8 +147,9 @@ class GameState extends FlxState {
 		
 		}
 		
-		overlay.add( TextUtil.genCaption( "Test caption", 0xFF8000, 50, 20, 100, true, true, 4 ) ); 
-		overlay.add( TextUtil.genCaption( "Another", 0x0000FF, 50, 20, 100, false, false, 7 ) ); 
+		//overlay.add( TextUtil.genCaption( "Test caption", 0xFF8000, 50, 20, 100, true, true, 4 ) ); 
+		//overlay.add( TextUtil.genCaption( "Another", 0x0000FF, 50, 20, 100, false, false, 7 ) ); 
+		captions.play( conf.capSequences.get( "intro" ) );
 	}
 	
 	
@@ -155,6 +159,8 @@ class GameState extends FlxState {
 
 	override public function update():Void {
 		super.update();
+		
+		captions.update();
 		FlxG.collide( player, map );
 		
 		//var screenXY = player.getScreenXY();
@@ -166,6 +172,8 @@ class GameState extends FlxState {
 		updateFloorLighting();
 		
 		Lambda.iter( enemies.members, iter_adjustSprite );
+		
+		FlxG.collide( player, collectibles, collide_collectItem );
 	}	
 		
 	private function updateFloorLighting():Void {
@@ -190,8 +198,6 @@ class GameState extends FlxState {
 		}
 		
 		Lambda.iter( collectibles.members, iter_adjustSprite );
-		
-		FlxG.collide( player, collectibles, collide_collectItem );
 	}
 	
 	private function iter_adjustSprite( coll:FlxSprite ) {
