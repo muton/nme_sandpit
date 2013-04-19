@@ -26,14 +26,15 @@ typedef EnemyInfo = {
 	spritePath:String,
 	spriteWidth:Int,
 	spriteHeight:Int,
-	flyAnim:AnimInfo,
+	moveAnim:AnimInfo,
 	deadFrame:Int
 }
 
 typedef LevelInfo = {
 	id:String,
 	mapPath:String,
-	items:Array<ItemPosition>
+	items:Array<ItemPosition>,
+	enemies:Array<EnemyPosition>
 }
 
 typedef CollectibleInfo = {
@@ -49,6 +50,11 @@ typedef ItemPosition = {
 	x:Int,
 	y:Int
 }
+
+typedef EnemyPosition = { > ItemPosition,
+	route:Array<Array<Int>>
+}
+
 
 class Config {
 

@@ -7,7 +7,7 @@
 			"spritePath": "assets/sprites/simple_bot_sheet.png",
 			"spriteWidth": 25,
 			"spriteHeight": 25,
-			"flyAnim": {
+			"moveAnim": {
 				"frameList": [1, 2, 3, 2],
 				"fps": 6
 			},
@@ -22,6 +22,12 @@
 				{ "id": "example", "x": 100, "y": 20 },
 				{ "id": "example", "x": 200, "y": 60 },
 				{ "id": "example", "x": 100, "y": 300 }
+			],
+			"enemies": [
+				{ 
+					"id": "simpleBot", "x": 150, "y": 30, 
+					"route": [ [250,30], [150,30] ] 
+				} 
 			]
 		}
 	],

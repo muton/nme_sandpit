@@ -2,6 +2,7 @@ package muton.gamebase.states;
 
 import muton.gamebase.Config;
 import muton.gamebase.game.Collectible;
+import muton.gamebase.game.Enemy;
 import muton.gamebase.game.TouchUI;
 import muton.gamebase.util.Lighting;
 import nme.display.BitmapData;
@@ -44,6 +45,7 @@ class GameState extends FlxState {
 	
 	private var lightSources:Array<FlxPoint>;
 	private var collectibles:FlxTypedGroup<Collectible>;
+	private var enemies:FlxTypedGroup<Enemy>;
 	private var player:Player;
 	
 	private var lastFloorTileX:Int;
@@ -87,11 +89,15 @@ class GameState extends FlxState {
 		add( floor );
 		add( map );
 		
+		collectibles = new FlxTypedGroup<Collectible>( 20 );
+		add( collectibles );
+		
+		enemies = new FlxTypedGroup<Enemy>( 20 );
+		add( enemies );
+		
 		player = new Player( 20, 20 );
 		add( player );
 		
-		collectibles = new FlxTypedGroup<Collectible>( 20 );
-		add( collectibles );
 		
 #if mobile		
 		add( new TouchUI( false ) );
@@ -122,6 +128,14 @@ class GameState extends FlxState {
 			coll.setup( conf.collectibles.get( itm.id ) );
 			coll.x = itm.x;
 			coll.y = itm.y;
+		}
+		
+		for ( en in conf.levels[0].enemies ) {
+			var enemy = enemies.recycle( Enemy );
+			enemy.setup( conf.enemies.get( en.id ) );
+			enemy.x = en.x;
+			enemy.y = en.y;
+			//TODO: Route
 		}
 	}
 	
@@ -164,12 +178,13 @@ class GameState extends FlxState {
 			}
 		}
 		
-		Lambda.iter( collectibles.members, iter_adjustCollectible );
+		Lambda.iter( collectibles.members, iter_adjustSprite );
+		Lambda.iter( enemies.members, iter_adjustSprite );
 		
 		FlxG.collide( player, collectibles, collide_collectItem );
 	}
 	
-	private function iter_adjustCollectible( coll:Collectible ) {
+	private function iter_adjustSprite( coll:FlxSprite ) {
 		if ( coll.exists ) {
 			coll.alpha = floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 9;
 		}
