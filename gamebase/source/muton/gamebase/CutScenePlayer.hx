@@ -1,6 +1,8 @@
 package muton.gamebase;
 import muton.gamebase.Config.CutScene;
 import muton.gamebase.Config.CutSceneFrame;
+import nme.events.Event;
+import nme.events.EventDispatcher;
 import nme.events.TimerEvent;
 import nme.utils.Timer;
 import org.flixel.FlxG;
@@ -14,8 +16,10 @@ import org.flixel.FlxTypedGroup;
  * @author tim@muton.co.uk
  */
 
-class CutScenePlayer {
+class CutScenePlayer extends EventDispatcher {
 
+	private var dispatcher:EventDispatcher;
+	
 	private var holderGroup:FlxTypedGroup<FlxGroup>;
 	private var display:CutSceneDisplay;
 	
@@ -30,6 +34,7 @@ class CutScenePlayer {
 	private var showFirst:Bool;
 	
 	public function new( holderGroup:FlxTypedGroup<FlxGroup> ) {
+		super();
 		this.holderGroup = holderGroup;
 	}
 	
@@ -48,12 +53,9 @@ class CutScenePlayer {
 		timer.addEventListener( TimerEvent.TIMER, tick, false, 1, true );
 		timer.start();
 		tick();
-		
 	}
 	
 	private function tick( ?e:TimerEvent ):Void {
-		
-		trace( "tick, curFrameNum = " + curFrameNum );
 		
 		var frame = cutScene.timeline[curFrameNum];
 		
@@ -62,8 +64,6 @@ class CutScenePlayer {
 			showFirst = false;
 			return;
 		}
-		
-//		trace( Std.format( 'tick curFrameNum $curFrameNum, frame.duration:${frame.duration}, timer.currentCount
 		
 		if ( timer.currentCount - curFrameStartTime > frame.duration ) {
 			// next frame
@@ -96,6 +96,7 @@ class CutScenePlayer {
 			timer.stop();
 			timer = null;
 		}
+		dispatchEvent( new Event( Event.COMPLETE ) );
 	}
 }
 

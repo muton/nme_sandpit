@@ -16,6 +16,7 @@ import nme.display.Sprite;
 import muton.gamebase.game.Player;
 import nme.Assets;
 import nme.display.Graphics;
+import nme.events.Event;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
@@ -109,6 +110,7 @@ class GameState extends FlxState {
 		add( overlay );
 		captions = new CaptionPlayer( overlay );
 		cutScenes = new CutScenePlayer( overlay );
+		cutScenes.addEventListener( Event.COMPLETE, onCutSceneComplete, false, 0, true );
 		
 #if mobile		
 		add( new TouchUI( false ) );
@@ -151,9 +153,18 @@ class GameState extends FlxState {
 		}
 		
 		//captions.play( conf.capSequences.get( "intro" ) );
-		cutScenes.play( conf.cutScenes.get( "demo" ) );
+		//cutScenes.play( conf.cutScenes.get( "demo" ) );
+		playCutScene( "demo" );
 	}
 	
+	private function playCutScene( sceneId:String ) {
+		cutScenes.play( conf.cutScenes.get( sceneId ) );
+		FlxG.timeScale = 0.001;
+	}
+	
+	private function onCutSceneComplete( ev:Event ) {
+		FlxG.timeScale = 1;
+	}
 	
 	override public function destroy():Void {
 		super.destroy();
@@ -193,7 +204,6 @@ class GameState extends FlxState {
 			for ( y in Std.int( Math.max( curTileY - 11, 0 ) )...Std.int( Math.min( curTileY + 12, floor.heightInTiles ) ) ) {
 				var dist = Math.sqrt( Math.pow( curTileX - x, 2 ) + Math.pow( curTileY - y, 2 ) );
 				var tileNum = Std.int( Math.ceil( 9 - Math.min( 9, dist ) ) );
-				//trace( Std.format( 'x:$x y:$y dist:$dist tileNum:$tileNum' ) );
 				floor.setTile( x, y, 
 					map.ray( new FlxPoint( player.x, player.y ), new FlxPoint( x * 16 + 8, y * 16 + 8), null, 2 ) ? tileNum : 0, true );
 			}
@@ -210,6 +220,7 @@ class GameState extends FlxState {
 	
 	private function collide_collectItem( objPlayer:FlxObject, objCollectible:FlxObject ) {
 		objCollectible.exists = false;
+		playCutScene( "demo" );
 	}
 	
 }
