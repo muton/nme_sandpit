@@ -62,27 +62,27 @@
 			"id": "demo",
 			"timeline": [
 				{
-					"duration": 10,
+					"duration": 3,
 					"imagePath": "assets/cutscenes/demo_img_1.png",
 					"captions": [
-						{ "label": "This is a demo", "duration": 4 },
-						{ "label": "The text is unrelated to the picture", "duration": 6 }
+						{ "label": "This is a demo", "duration": 2 },
+						{ "label": "The text is unrelated to the picture", "duration": 1 }
 					]
 				},
 				{
-					"duration": 5,
+					"duration": 2,
 					"imagePath": "assets/cutscenes/demo_img_2.png",
 					"captions": [
-						{ "label": "Just another picture", "duration": 5 }
+						{ "label": "Just another picture", "duration": 2 }
 					]
 				},
 				{
-					"duration": 8,
+					"duration": 3,
 					"imagePath": "assets/cutscenes/demo_img_3.png",
 					"captions": [
-						{ "label": "And finally...", "duration": 2 },
-						{ "label": "...a cute...", "duration": 2 },
-						{ "label": "...little squirrel.", "duration": 2 }
+						{ "label": "And finally...", "duration": 1 },
+						{ "label": "...a cute...", "duration": 1 },
+						{ "label": "...little squirrel.", "duration": 1 }
 					]
 				}
 			]

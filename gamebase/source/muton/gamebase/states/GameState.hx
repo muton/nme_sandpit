@@ -2,6 +2,7 @@ package muton.gamebase.states;
 
 import muton.gamebase.CaptionPlayer;
 import muton.gamebase.Config;
+import muton.gamebase.CutScenePlayer;
 import muton.gamebase.game.Collectible;
 import muton.gamebase.game.Enemy;
 import muton.gamebase.game.TouchUI;
@@ -40,6 +41,7 @@ class GameState extends FlxState {
 	
 	private var conf:Config;
 	private var captions:CaptionPlayer;
+	private var cutScenes:CutScenePlayer;
 	
 	private var bg:FlxSprite;
 	private var floor:FlxTilemap;
@@ -106,6 +108,7 @@ class GameState extends FlxState {
 		overlay = new FlxTypedGroup<FlxGroup>( 10 );
 		add( overlay );
 		captions = new CaptionPlayer( overlay );
+		cutScenes = new CutScenePlayer( overlay );
 		
 #if mobile		
 		add( new TouchUI( false ) );
@@ -147,9 +150,8 @@ class GameState extends FlxState {
 		
 		}
 		
-		//overlay.add( TextUtil.genCaption( "Test caption", 0xFF8000, 50, 20, 100, true, true, 4 ) ); 
-		//overlay.add( TextUtil.genCaption( "Another", 0x0000FF, 50, 20, 100, false, false, 7 ) ); 
-		captions.play( conf.capSequences.get( "intro" ) );
+		//captions.play( conf.capSequences.get( "intro" ) );
+		cutScenes.play( conf.cutScenes.get( "demo" ) );
 	}
 	
 	

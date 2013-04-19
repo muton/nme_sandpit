@@ -98,7 +98,7 @@ class Config {
 	public var levels:Array<LevelInfo>;
 	public var collectibles:Hash<CollectibleInfo>;
 	public var capSequences:Hash<CaptionSequence>;
-	private var cutScenes:Hash<CutScene>;
+	public var cutScenes:Hash<CutScene>;
 	
 	public function new( path:String ) {
 		var conf:GameConf = Json.parse( Assets.getText( path ) );
