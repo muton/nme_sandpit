@@ -165,12 +165,18 @@ class GameState extends FlxState {
 		}
 		
 		Lambda.iter( collectibles.members, iter_adjustCollectible );
+		
+		FlxG.collide( player, collectibles, collide_collectItem );
 	}
 	
 	private function iter_adjustCollectible( coll:Collectible ) {
 		if ( coll.exists ) {
 			coll.alpha = floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 9;
 		}
+	}
+	
+	private function collide_collectItem( objPlayer:FlxObject, objCollectible:FlxObject ) {
+		objCollectible.exists = false;
 	}
 	
 }
