@@ -20,6 +20,7 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxTilemap;
 import org.flixel.FlxTypedGroup;
+import org.flixel.FlxU;
 
 class GameState extends FlxState {
 	
@@ -62,12 +63,14 @@ class GameState extends FlxState {
 		enemies = new FlxTypedGroup<Enemy>( 20 );
 		add( enemies );
 		
-		player = new Player( 0, 0 );
+		player = new Player( 0, 0, playerAttack );
 		add( player );
 		
 		overlay = new FlxTypedGroup<FlxGroup>( 10 );
 		add( overlay );
+		
 		captions = new CaptionPlayer( overlay );
+		
 		cutScenes = new CutScenePlayer( overlay );
 		cutScenes.addEventListener( Event.COMPLETE, onCutSceneComplete, false, 0, true );
 		
@@ -182,9 +185,17 @@ class GameState extends FlxState {
 		Lambda.iter( collectibles.members, iter_adjustSpriteBrightness );
 	}
 	
+	private function playerAttack( hitPt:FlxPoint ) {
+		Lambda.iter( enemies.members, function( enemy:Enemy ):Void { 
+			if ( enemy.overlapsPoint( hitPt ) ) {
+				enemy.kill();
+			}
+		} );
+	}
+	
 	private function iter_adjustSpriteBrightness( coll:FlxSprite ) {
 		if ( coll.exists ) {
-			var factor:Int = Std.int( 0xff * floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 9 );
+			var factor:Int = Std.int( 0xff * floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 7 );
 			coll.color = 0xff << 25 | factor << 16 | factor << 8 | factor << 0;
 		}
 	}

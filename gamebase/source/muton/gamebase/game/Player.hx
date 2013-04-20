@@ -1,6 +1,7 @@
 package muton.gamebase.game;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
+import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
 /**
@@ -13,9 +14,11 @@ class Player extends FlxSprite {
 	private static inline var WALK_SPEED:Float = 80;
 	
 	private var facingAnims:IntHash<String>;
+	private var attackFunc:FlxPoint->Void;
 	
-	public function new( x:Float, y:Float ) {
+	public function new( x:Float, y:Float, attackFunc:FlxPoint->Void ) {
 		super( x, y );
+		this.attackFunc = attackFunc;
 		
 		facingAnims = new IntHash<String>();
 		facingAnims.set( FlxObject.LEFT, "left" );
@@ -47,7 +50,6 @@ class Player extends FlxSprite {
 			velocity.y *= 0.75;
 		}
 		
-		
 		if ( velocity.x != 0 ) {
 			facing = velocity.x < 0 ? FlxObject.LEFT : FlxObject.RIGHT;
 			play( facingAnims.get( facing ) );
@@ -55,6 +57,17 @@ class Player extends FlxSprite {
 			facing = velocity.y < 0 ? FlxObject.UP : FlxObject.DOWN;
 			play( facingAnims.get( facing ) );
 		} 
+		
+		if ( ctrl.fireA ) { 
+			var attackPt:FlxPoint = new FlxPoint( x + origin.x, y + origin.y );
+			switch ( facing ) {
+				case FlxObject.LEFT: attackPt.x -= width;
+				case FlxObject.RIGHT: attackPt.x += width;
+				case FlxObject.UP: attackPt.y -= height;
+				case FlxObject.DOWN: attackPt.y += height;
+			}
+			attackFunc( attackPt );
+		}
 		
 		super.update();
 	}
