@@ -36,6 +36,7 @@ typedef EnemyInfo = {
 typedef LevelInfo = {
 	id:String,
 	mapPath:String,
+	startTile:Array<Int>,
 	items:Array<ItemPosition>,
 	enemies:Array<EnemyPosition>
 }
