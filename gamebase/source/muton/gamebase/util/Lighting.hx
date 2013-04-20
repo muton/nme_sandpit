@@ -3,6 +3,7 @@ import nme.display.BitmapData;
 import nme.display.BlendMode;
 import nme.display.GradientType;
 import nme.display.Sprite;
+import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
@@ -81,14 +82,17 @@ class Lighting {
 	}
 	
 	
-	public static inline function genLightMapTileSet( numTiles:Int, tileWidth:Int, tileHeight:Int, maxAlpha:Float ):BitmapData {
+	public static inline function genLightMapTileSet( numTiles:Int, tileWidth:Int, tileHeight:Int, 
+		maxBrightness:Float, baseImage:BitmapData ):BitmapData {
+			
 		var bmpd = new BitmapData( numTiles * tileWidth, tileHeight, true, 0x00000000 );
-		var alphaIncrement = maxAlpha / numTiles * 0xff;
+		var increment = maxBrightness / numTiles;
 		var rect:Rectangle = new Rectangle( 0, 0, tileWidth, tileHeight );
+		var mtr = new Matrix();
 		var baseColour = 0x00FFFFB9;
 		for ( i in 0...numTiles ) {
-			rect.x = i * tileWidth;
-			bmpd.fillRect( rect, baseColour + ( Std.int( alphaIncrement * i ) << 24 ) );
+			mtr.tx = i * tileWidth;
+			bmpd.draw( baseImage, mtr, new ColorTransform( increment * i, increment * i, increment * i, 1 ) );
 		}
 		return bmpd;
 	}

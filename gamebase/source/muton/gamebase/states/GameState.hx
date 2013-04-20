@@ -9,7 +9,6 @@ import muton.gamebase.game.Player;
 import muton.gamebase.game.TouchUI;
 import muton.gamebase.util.Lighting;
 import nme.Assets;
-import nme.display.BlendMode;
 import nme.events.Event;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -33,7 +32,6 @@ class GameState extends FlxState {
 	
 	private var curLevel:LevelInfo;
 	
-	private var bg:FlxSprite;
 	private var floor:FlxTilemap;
 	private var map:FlxTilemap;
 	
@@ -51,10 +49,6 @@ class GameState extends FlxState {
 		FlxG.mouse.hide();
 		
 		conf = new Config( "assets/conf/config.json" );
-		
-		bg = new FlxSprite();
-		bg.active = false;
-		add( bg );
 		
 		floor = new FlxTilemap();
 		add( floor );
@@ -101,16 +95,15 @@ class GameState extends FlxState {
 		floor.heightInTiles = map.heightInTiles;
 		var blankArr = new Array<Int>();
 		for ( i in 0...map.totalTiles ) { blankArr.push( 0 ); }
+		var floorTile:FlxSprite = new FlxSprite( 0, 0, "assets/tiles/floor_tile_16x16.png" );
 		floor.loadMap(
 			blankArr, 
-			Lighting.genLightMapTileSet( 10, TILE_WIDTH, TILE_HEIGHT, 0.65 ),
+			Lighting.genLightMapTileSet( 7, TILE_WIDTH, TILE_HEIGHT, 0.9, floorTile.pixels ),
 			TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF, 0, 1, 0 );
 			
 			
 		// make the world bigger so tilemap collisions work, but camera doesn't stop at edge of play area
 		FlxG.worldBounds.copyFrom( new FlxRect( -100, -100, map.width + 100, map.height + 100 ) );
-		
-		//bg.makeGraphic( Std.int( map.width ), Std.int( map.height ), 0xFF000000 );
 		
 		Lambda.iter( collectibles.members, iter_unexistSprite );
 		
@@ -158,15 +151,9 @@ class GameState extends FlxState {
 		captions.update();
 		FlxG.collide( player, map );
 		
-		//var screenXY = player.getScreenXY();
-		//darkness.makeGraphic( FlxG.width, FlxG.height, 0xff000000, true );
-		//darkness.stamp( lighting, Std.int( screenXY.x - 45 ), Std.int( screenXY.y - 45 ) );
-		//
-		//floor.setTile( Std.int( player.x / 16 ), Std.int( player.y / 16 ), 9, true );
-		
 		updateFloorLighting();
 		
-		Lambda.iter( enemies.members, iter_adjustSprite );
+		Lambda.iter( enemies.members, iter_adjustSpriteBrightness );
 		
 		FlxG.collide( player, collectibles, collide_collectItem );
 		FlxG.collide( player, enemies, collide_hitEnemy );
@@ -186,17 +173,16 @@ class GameState extends FlxState {
 		for ( x in Std.int( Math.max( curTileX - 11, 0 ) )...Std.int( Math.min( curTileX + 12, floor.widthInTiles  ) ) ) {
 			for ( y in Std.int( Math.max( curTileY - 11, 0 ) )...Std.int( Math.min( curTileY + 12, floor.heightInTiles ) ) ) {
 				var dist = Math.sqrt( Math.pow( curTileX - x, 2 ) + Math.pow( curTileY - y, 2 ) );
-				var tileNum = Std.int( Math.ceil( 9 - Math.min( 9, dist ) ) );
+				var tileNum = Std.int( Math.ceil( 6 - Math.min( 6, dist ) ) );
 				floor.setTile( x, y, 
 					map.ray( new FlxPoint( player.x, player.y ), 
 					new FlxPoint( x * TILE_WIDTH + 8, y * TILE_HEIGHT + 8), null, 2 ) ? tileNum : 0, true );
 			}
 		}
-		
-		Lambda.iter( collectibles.members, iter_adjustSprite );
+		Lambda.iter( collectibles.members, iter_adjustSpriteBrightness );
 	}
 	
-	private function iter_adjustSprite( coll:FlxSprite ) {
+	private function iter_adjustSpriteBrightness( coll:FlxSprite ) {
 		if ( coll.exists ) {
 			var factor:Int = Std.int( 0xff * floor.getTile( Std.int( coll.x / 16 ), Std.int( coll.y / 16 ) ) / 9 );
 			coll.color = 0xff << 25 | factor << 16 | factor << 8 | factor << 0;
