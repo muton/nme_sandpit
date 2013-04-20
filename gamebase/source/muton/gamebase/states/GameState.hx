@@ -24,6 +24,9 @@ import org.flixel.FlxTypedGroup;
 
 class GameState extends FlxState {
 	
+	private static inline var TILE_WIDTH:Int = 16;
+	private static inline var TILE_HEIGHT:Int = 16;
+	
 	private var conf:Config;
 	private var captions:CaptionPlayer;
 	private var cutScenes:CutScenePlayer;
@@ -33,10 +36,7 @@ class GameState extends FlxState {
 	private var bg:FlxSprite;
 	private var floor:FlxTilemap;
 	private var map:FlxTilemap;
-	private var darkness:FlxSprite;
-	private var lighting:FlxSprite;
 	
-	private var lightSources:Array<FlxPoint>;
 	private var collectibles:FlxTypedGroup<Collectible>;
 	private var enemies:FlxTypedGroup<Enemy>;
 	private var player:Player;
@@ -52,37 +52,14 @@ class GameState extends FlxState {
 		
 		conf = new Config( "assets/conf/config.json" );
 		
-		curLevel = conf.levels[0];
-		
-		lightSources = new Array<FlxPoint>();
-		lightSources.push( new FlxPoint( 20, 20 ) );
-		lightSources.push( new FlxPoint( 100, 40 ) );
-		
 		bg = new FlxSprite();
 		bg.active = false;
 		add( bg );
 		
+		floor = new FlxTilemap();
+		add( floor );
 		
 		map = new FlxTilemap();
-		map.loadMap( 
-			Assets.getText( curLevel.mapPath ), 
-			Assets.getBitmapData( "assets/tiles/autotiles_dark_16x16.png" ),
-			//Assets.getBitmapData( "assets/tiles/autotiles_16x16.png" ),
-			16, 16, FlxTilemap.ALT );
-		//map.follow();	// causes camera bounds to be set too
-			
-		floor = new FlxTilemap();
-		floor.drawDebug();
-		floor.widthInTiles = map.widthInTiles;
-		floor.heightInTiles = map.heightInTiles;
-		var blankArr = new Array<Int>();
-		for ( i in 0...map.totalTiles ) { blankArr.push( 0 ); }
-		floor.loadMap(
-			blankArr, 
-			Lighting.genLightMapTileSet( 10, 16, 16, 0.65 ),
-			16, 16, FlxTilemap.OFF, 0, 1, 0 );
-			
-		add( floor );
 		add( map );
 		
 		collectibles = new FlxTypedGroup<Collectible>( 20 );
@@ -91,7 +68,7 @@ class GameState extends FlxState {
 		enemies = new FlxTypedGroup<Enemy>( 20 );
 		add( enemies );
 		
-		player = new Player( 16 * curLevel.startTile[0], 16 * curLevel.startTile[1] );
+		player = new Player( 0, 0 );
 		add( player );
 		
 		overlay = new FlxTypedGroup<FlxGroup>( 10 );
@@ -104,44 +81,62 @@ class GameState extends FlxState {
 		add( new TouchUI( false ) );
 #end		
 
-		//darkness = new FlxSprite( 0, 0 );
-		//darkness.makeGraphic( FlxG.width, FlxG.height, 0xFF000000 );
-		//darkness.scrollFactor.x = darkness.scrollFactor.y = 0;
-		//darkness.blend = BlendMode.MULTIPLY;
-		//darkness.active = false;
-		//add( darkness );
-		
-		lighting = new FlxSprite( 0, 0 );
-		lighting.makeGraphic( 140, 140, 0xff000000 );
-		lighting.pixels.draw( Lighting.circSprite( 70 ) );
-		lighting.blend = BlendMode.SCREEN;
-		
 		//FlxG.camera.setBounds( 0, 0, map.width, map.height, true );
 		FlxG.camera.follow( player, FlxCamera.STYLE_TOPDOWN, null, 3 );
+		
+		curLevel = conf.levels[0];
+		resetLevel();
+	}
+	
+	private function resetLevel() {
+		
+		map.loadMap( 
+			Assets.getText( curLevel.mapPath ), 
+			Assets.getBitmapData( "assets/tiles/autotiles_dark_16x16.png" ),
+			//Assets.getBitmapData( "assets/tiles/autotiles_16x16.png" ),
+			16, 16, FlxTilemap.ALT );
+		//map.follow();	// causes camera bounds to be set too
+		
+		floor.widthInTiles = map.widthInTiles;
+		floor.heightInTiles = map.heightInTiles;
+		var blankArr = new Array<Int>();
+		for ( i in 0...map.totalTiles ) { blankArr.push( 0 ); }
+		floor.loadMap(
+			blankArr, 
+			Lighting.genLightMapTileSet( 10, TILE_WIDTH, TILE_HEIGHT, 0.65 ),
+			TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF, 0, 1, 0 );
+			
+			
 		// make the world bigger so tilemap collisions work, but camera doesn't stop at edge of play area
 		FlxG.worldBounds.copyFrom( new FlxRect( -100, -100, map.width + 100, map.height + 100 ) );
 		
-		bg.makeGraphic( Std.int( map.width ), Std.int( map.height ), 0xFF000000 );
-		//Lighting.redrawBg( bg, lightSources, map.width, map.height );
+		//bg.makeGraphic( Std.int( map.width ), Std.int( map.height ), 0xFF000000 );
+		
+		Lambda.iter( collectibles.members, iter_unexistSprite );
 		
 		for ( itm in curLevel.items ) {
 			var coll = collectibles.recycle( Collectible );
 			coll.setup( conf.collectibles.get( itm.id ) );
 			coll.x = itm.x;
 			coll.y = itm.y;
+			coll.exists = true;
+			coll.alive = true;
 		}
+		
+		Lambda.iter( enemies.members, iter_unexistSprite );
 		
 		for ( en in curLevel.enemies ) {
 			var enemy:Enemy = enemies.recycle( Enemy );
 			enemy.setup( conf.enemies.get( en.id ) );
+			enemy.active = true;
+			enemy.exists = true;
 			enemy.x = en.x;
 			enemy.y = en.y;
 			enemy.followPath( Config.routeToPath( en.route ), 100, FlxObject.PATH_LOOP_BACKWARD );
 		}
 		
-		//captions.play( conf.capSequences.get( "intro" ) );
-		//cutScenes.play( conf.cutScenes.get( "demo" ) );
-		playCutScene( "demo" );
+		player.x = TILE_WIDTH * curLevel.startTile[0];
+		player.y = TILE_HEIGHT * curLevel.startTile[1];
 	}
 	
 	private function playCutScene( sceneId:String ) {
@@ -174,11 +169,12 @@ class GameState extends FlxState {
 		Lambda.iter( enemies.members, iter_adjustSprite );
 		
 		FlxG.collide( player, collectibles, collide_collectItem );
+		FlxG.collide( player, enemies, collide_hitEnemy );
 	}	
 		
 	private function updateFloorLighting():Void {
-		var curTileX = Std.int( player.x / 16 );
-		var curTileY = Std.int( player.y / 16 );
+		var curTileX = Std.int( player.x / TILE_WIDTH );
+		var curTileY = Std.int( player.y / TILE_HEIGHT );
 		
 		if ( lastFloorTileX == curTileX && lastFloorTileY == curTileY ) { 
 			return;
@@ -192,7 +188,8 @@ class GameState extends FlxState {
 				var dist = Math.sqrt( Math.pow( curTileX - x, 2 ) + Math.pow( curTileY - y, 2 ) );
 				var tileNum = Std.int( Math.ceil( 9 - Math.min( 9, dist ) ) );
 				floor.setTile( x, y, 
-					map.ray( new FlxPoint( player.x, player.y ), new FlxPoint( x * 16 + 8, y * 16 + 8), null, 2 ) ? tileNum : 0, true );
+					map.ray( new FlxPoint( player.x, player.y ), 
+					new FlxPoint( x * TILE_WIDTH + 8, y * TILE_HEIGHT + 8), null, 2 ) ? tileNum : 0, true );
 			}
 		}
 		
@@ -206,9 +203,18 @@ class GameState extends FlxState {
 		}
 	}
 	
+	private function iter_unexistSprite( spr:FlxSprite ) {
+		spr.exists = false;
+	}
+	
 	private function collide_collectItem( objPlayer:FlxObject, objCollectible:FlxObject ) {
 		objCollectible.exists = false;
 		playCutScene( "demo" );
 	}
+	
+	private function collide_hitEnemy( objPlayer:FlxObject, objEnemy:FlxObject ) {
+		resetLevel();
+	}
+	
 	
 }
